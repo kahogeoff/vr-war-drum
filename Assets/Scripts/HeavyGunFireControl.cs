@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class HeavyGunFireControl : GunFireControl {
-    public bool fired = false;
     public GameObject Explosion;
 
     [SerializeField]
@@ -19,7 +18,7 @@ public class HeavyGunFireControl : GunFireControl {
         /*****************/
         /* test hit drum */
         /*****************/
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(DebugKey))
         {
             FireTheGun(_testPos);
         }

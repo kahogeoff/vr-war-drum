@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class LightGunFireControl : GunFireControl {
-    public bool fired = false;
+
+    [SerializeField]
+    private Vector3 _testPos = new Vector3(3.6f, -1.0f, -7f);
     // Use this for initialization
     void Start()
     {
@@ -13,15 +15,12 @@ public class LightGunFireControl : GunFireControl {
     // Update is called once per frame
     void Update()
     {
-        if (fired)
-        {
-        }
         /*****************/
         /* test hit drum */
         /*****************/
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(DebugKey))
         {
-            fired = true;
+            FireTheGun(_testPos);
         }
     }
 

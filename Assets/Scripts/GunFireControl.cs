@@ -5,6 +5,7 @@ using UnityEngine;
 public class GunFireControl : MonoBehaviour {
     public GameObject Bullet;
     public string AnimationName = "";
+    public KeyCode DebugKey;
 
     [SerializeField] protected Animator _selfAnimator;
     // Use this for initialization
