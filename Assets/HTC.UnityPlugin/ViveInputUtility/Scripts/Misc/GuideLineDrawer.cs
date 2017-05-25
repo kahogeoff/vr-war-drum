@@ -59,7 +59,7 @@ public class GuideLineDrawer : MonoBehaviour
         if (pointCount == 2)
         {
 #if UNITY_5_5_OR_NEWER
-            lineRenderer.numPositions = 2;
+            lineRenderer.positionCount = 2;
 #else
             lineRenderer.SetVertexCount(2);
 #endif
@@ -89,7 +89,7 @@ public class GuideLineDrawer : MonoBehaviour
             var factor = (approachVy - initSlope * approachVx) / (approachVx * approachVx);
 
 #if UNITY_5_5_OR_NEWER
-            lineRenderer.numPositions = segments + 1;
+            lineRenderer.positionCount = segments + 1;
 #else
             lineRenderer.SetVertexCount(segments + 1);
 #endif

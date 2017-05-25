@@ -1,0 +1,9 @@
+Particle Attractor http://u3d.as/N0n primarily contains scripts and particle system prefabs. When using the any "particleAttractorXXX" script for your own particle effect, you add the script to the game object which contains the particle system component you want to modify its particle movement, then assign a target object to the script. The attraction behaviour is only visible when the scene is running. You can modify the speed value of the script to change the change which time required for each particle to travel to the target position.
+
+"particleAttractorSpherical" script is special that it will curve the particle movement when the particle's initial direction does not point towards the target, this can be achieve by using the "sphere" emitter shape of particle system "shape" module.
+
+"particleAttractorSpherical", "particleAttractorLinear" and "particleAttractorMove" only differ in line 21 which decide which method is used to move the particle to the target. "particleAttractorSelf" does not need a target as it tells each particle to target another particle of the same particle system for a silly effect.
+
+"rotation" script does not make the particle move towards any target, it simply rotate the transform of the object which attaches this script. Refering the "revolver" effects, this makes all particles spin accordingly when the simulation space of the particle system is "local" instead of "world".
+
+If you have any question, please send us email moonflowercarnivore@gmail.com or message us on Facebook https://www.facebook.com/MoonflowerCarnivore . To support us, please rate our assets or purchase our assets http://u3d.as/cxf . Thank you.
