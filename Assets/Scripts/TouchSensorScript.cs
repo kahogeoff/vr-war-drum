@@ -41,7 +41,7 @@ public class TouchSensorScript : MonoBehaviour {
 
     protected void OnTriggerStay(Collider c)
     {
-        Debug.Log("Stay on sensor");
+        //Debug.Log("Stay on sensor");
         if (PressToActive && Input.GetButtonDown("Interact"))
         {
             _targetObject.SendMessage(TriggerEnterFunctionName);
@@ -53,7 +53,7 @@ public class TouchSensorScript : MonoBehaviour {
 
     protected void OnTriggerExit(Collider c)
 	{
-		Debug.Log ("Exit the sensor");
+		//Debug.Log ("Exit the sensor");
         _colliderList.Remove(c);
         if (_colliderList.Count < 1)
         {

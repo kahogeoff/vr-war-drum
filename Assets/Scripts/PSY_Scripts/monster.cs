@@ -4,23 +4,21 @@ using UnityEngine;
 
 public class monster : MonoBehaviour {
 
-	public float speed;
+	public float speed = 100.0f;
 	public Transform target;
 
 	// Use this for initialization
 	void Start () {
 		Destroy (gameObject, 3f);
-		target = GameObject.FindGameObjectWithTag ("MainCamera").transform;
+		target = GameObject.FindGameObjectWithTag ("Hitpoints").transform;
 
-		transform.position = new Vector3(-4,1,5);
+		Vector3 relativePos = target.position - transform.position;
+		Quaternion rotation = Quaternion.LookRotation(relativePos);
+		transform.rotation = rotation;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		Vector3 relativePos = target.position - transform.position;
-		//Quaternion rotation = Quaternion.LookRotation(relativePos);
-		//transform.rotation = rotation;
-
-		transform.Translate (-1 * Vector3.forward * speed * Time.deltaTime);
+		transform.Translate (Vector3.forward * speed * Time.deltaTime);
 	}
 }
