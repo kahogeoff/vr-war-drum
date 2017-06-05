@@ -7,6 +7,7 @@ using System;
 
 public class MonsterGenerator : MonoBehaviour
 {
+    public LevelStateManager stateManager;
 
     public AudioSource audio;
     public GameObject[] monsters;
@@ -14,80 +15,81 @@ public class MonsterGenerator : MonoBehaviour
     public Transform spawnsite;
     public Transform hitpoint;
     public float speed = 100.0f;
-    //public string songname;
-    //public string songpath;
+    static public float finalScore;
+
+    public UIControl _UIControl;
 
     private string pattern1 = @"";
     private string pattern2 = @"#[A-Z]*";
     private string pattern3 = @"\d*,";
+    private int num_of_monster = 0;
+
     public int play_index = 0;
-    private float flyingtime;
+    public float flyingtime;
 
     public struct Rhythm
     {
         public int id;
         public float time;
-        public bool isGenerated;
     }
     public List<Rhythm> rhythms;
 
     // Use this for initialization
     void Start()
     {
-        rhythms = new List<Rhythm>();
-        Readtja();
-        foreach (Rhythm rhythm in rhythms)
-        {
-            //Debug.Log ("hit id: " + rhythm.id);
-            //Debug.Log ("hit time: " + rhythm.time);
-        }
+        num_of_monster = 0;
+
+        _UIControl = GameObject.Find("UIObject").GetComponent<UIControl>();
+        
 
         flyingtime = ((hitpoint.position - spawnsite.position).magnitude) / speed;
-        Debug.Log(flyingtime);
+        //Debug.Log(flyingtime);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetAxis("LeftTrigger") + Input.GetAxis("RightTrigger") > 1.8f)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
+            InitializeSong();
             if (!audio.isPlaying)
             {
-                audio.Play();
+                if (audio.time == 0.0f)
+                {
+                    PlaybackStart();
+                }
+                else {
+                    PlaybackPause();
+                }
             }
             else {
-                audio.Pause();
+                PlaybackResume();
             }
         }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             audio.Stop();
-            /*foreach (Rhythm rhythm in rhythms) {
-				rhythm.isGenerated = false;
-			}*/
         }
 
     }
 
     void FixedUpdate()
     {
-        //Debug.Log (Time.fixedDeltaTime);
-        //Debug.Log (audio.time);
-        //Debug.Log(AudioSettings.dspTime);
         if (audio.isPlaying)
         {
-            //Debug.Log ("audio.time: " + audio.time);
-            //Debug.Log ("rhythms[i].time: " + rhythms [play_index].time);
             if (audio.time > rhythms[play_index].time - flyingtime)
             {
-                //Debug.Log ("count: " + rhythms.Count);
-                //Debug.Log ("id: " + rhythms [play_index].id);
-                //Debug.Log("play_index: " + play_index);
                 GenerateMonster(rhythms[play_index].id);
                 if (rhythms.Count - 1 > play_index)
                     play_index++;
             }
         }
+        else if(audio.time > audio.clip.length-1)
+        {
+            SendMessage("GameEnd");
+        }
+
+        //Debug.Log(String.Format("Time = {0}/{1}", audio.time, audio.clip.length));
     }
 
     void GenerateMonster(int id)
@@ -97,6 +99,7 @@ public class MonsterGenerator : MonoBehaviour
             case 0:
                 break;
             case 1:
+                num_of_monster++;
                 if (UnityEngine.Random.Range(0, 2) == 0)
                 {
                     Instantiate(monsters[0], spawnsites[0].position, Quaternion.identity);
@@ -106,6 +109,7 @@ public class MonsterGenerator : MonoBehaviour
                 }
                 break;
             case 2:
+                num_of_monster++;
                 if (UnityEngine.Random.Range(0, 2) == 0)
                 {
                     Instantiate(monsters[1], spawnsites[1].position, Quaternion.identity);
@@ -115,10 +119,12 @@ public class MonsterGenerator : MonoBehaviour
                 }
                 break;
             case 3:
+                num_of_monster += 2;
                 Instantiate(monsters[0], spawnsites[0].position, Quaternion.identity);
                 Instantiate(monsters[2], spawnsites[2].position, Quaternion.identity);
                 break;
             case 4:
+                num_of_monster += 2;
                 Instantiate(monsters[1], spawnsites[3].position, Quaternion.identity);
                 Instantiate(monsters[3], spawnsites[1].position, Quaternion.identity);
                 break;
@@ -145,13 +151,15 @@ public class MonsterGenerator : MonoBehaviour
 
     void Readtja()
     {
-        Debug.Log(audio.clip.length);
+        //Debug.Log(audio.clip.length);
 
         Regex regex1 = new Regex(pattern1);
         Regex regex2 = new Regex(pattern2);
         Regex regex3 = new Regex(pattern3);
 
-        string path = Application.dataPath + "/Resources/Blade of Hope/Blade of Hope.tja";
+        string path = Application.dataPath + "/Resources/"+_UIControl.songFullList[_UIControl.songIdx] + ".tja";
+        //string path = Application.dataPath + "/Resources/Blade of Hope/Blade of Hope.tja";
+
         Debug.Log(path);
 
         if (!File.Exists(path))
@@ -189,7 +197,6 @@ public class MonsterGenerator : MonoBehaviour
                                     Rhythm tmp;
                                     tmp.id = (int)Char.GetNumericValue(hits[i]);
                                     tmp.time = t;
-                                    tmp.isGenerated = false;
                                     rhythms.Add(tmp);
                                     t += crotchet * 4 / hits.Length;
                                 }
@@ -225,4 +232,49 @@ public class MonsterGenerator : MonoBehaviour
             //Debug.Log (line);
         }
     }
+
+    void InitializeSong()
+    {
+        rhythms = new List<Rhythm>();
+        Readtja();
+        audio.clip = Resources.Load<AudioClip>(_UIControl.songFullList[_UIControl.songIdx]);
+    }
+   
+    void PlaybackStart()
+    {
+        StartCoroutine("OnPlaybackStart");
+    }
+
+    void PlaybackPause()
+    {
+        audio.Pause();
+        Time.timeScale = 0.0f;
+    }
+
+    void PlaybackResume()
+    {
+        audio.UnPause();
+        Time.timeScale = 1.0f;
+    }
+
+    void PlaybackEnd()
+    {
+        //Is end
+        finalScore = (float)CalculateScore.score / (num_of_monster) * 100;
+        play_index = 0;
+        //_UIControl.SelectBoardAppear();
+        Debug.Log("Score: " + finalScore + "%");
+        Debug.Log("Max combo: " + CalculateScore.maxcombo);
+        Debug.Log("-------------------END------------------");
+
+    }
+
+    IEnumerator OnPlaybackStart()
+    {
+        InitializeSong();
+        yield return new WaitForSeconds(3.0f);
+        audio.time = 0.0f;
+        audio.Play();
+    }
+
 }

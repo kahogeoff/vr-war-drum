@@ -5,9 +5,12 @@ using UnityEngine;
 public class DrumScript : MonoBehaviour {
     public enum DrumType
     {
-        Red, Blue
+        NotADrum ,Red , Blue
     }
-
+    public enum DrumPosition
+    {
+        Left, Right
+    }
     public MonsterGenerator Generator;
 
     public Transform Gunpoint;
@@ -18,10 +21,15 @@ public class DrumScript : MonoBehaviour {
 
     private List<GameObject> _colliedObjects = new List<GameObject>();
     private bool _canFire = false;
-	// Use this for initialization
-	void Start () {
-        Generator = GameObject.Find("[LevelManager]").GetComponent<MonsterGenerator>();
 
+    public bool selectionMode = true;
+    public DrumPosition _drumPosition = DrumPosition.Left;
+    public UIControl _UIControl;
+
+    // Use this for initialization
+    void Start () {
+        Generator = GameObject.Find("[LevelManager]").GetComponent<MonsterGenerator>();
+        _UIControl = GameObject.Find("UIObject").GetComponent<UIControl>();
     }
 	
 	// Update is called once per frame
@@ -45,7 +53,17 @@ public class DrumScript : MonoBehaviour {
         {
             Instantiate<GameObject>(Bullet, Gunpoint.position, Gunpoint.rotation);
         }
-        
+        if (selectionMode)
+        {
+            if (_drumPosition == DrumPosition.Left)
+            {
+                _UIControl.ChangeSongLeft();
+            }
+            if (_drumPosition == DrumPosition.Right)
+            {
+                _UIControl.ChangeSongRight();
+            }
+        }
     }
 
     void EnableFiring()

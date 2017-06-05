@@ -5,21 +5,26 @@ using UnityEngine;
 public class DrumStick : MonoBehaviour {
     public Transform Target;
     public float ReturnSpeed = 1.0f;
-    public float Range = 1.0f;
+    public float FollowRange = 1.0f;
+    public float ResetRange = 2.0f;
 
     public GameObject HitEffect;
     public Vector3 EffectScale = Vector3.one;
 
-    [SerializeField] SteamVR_TrackedObject trackedObj;
-    SteamVR_Controller.Device device;
+    public DrumScript.DrumType HittedDrumType = DrumScript.DrumType.NotADrum;
+
+    [SerializeField] private SteamVR_TrackedObject trackedObj;
+    private SteamVR_Controller.Device device;
 
     private Rigidbody _selfRigidbody;
-    bool _lock = false;
+    private bool _lock = false;
+
 	// Use this for initialization
 	void Start () {
         _selfRigidbody = GetComponent<Rigidbody>();
         transform.position = trackedObj.transform.position;
     }
+
     void FixedUpdate()
     {
         device = SteamVR_Controller.Input((int)trackedObj.index);
@@ -31,7 +36,12 @@ public class DrumStick : MonoBehaviour {
         float tmp_distance = tmp_heading.magnitude;
         Vector3 tmp_dir = tmp_heading / tmp_distance;
 
-        if (tmp_heading.sqrMagnitude > Range * Range)
+        /*
+        if (tmp_heading.sqrMagnitude > ResetRange * ResetRange)
+        {
+            gameObject.SendMessage("Start");
+
+        }else */if (tmp_heading.sqrMagnitude > FollowRange * FollowRange)
         {
             _selfRigidbody.velocity = device.velocity + (tmp_dir * ReturnSpeed); //transform.forward;
             _selfRigidbody.angularVelocity = device.angularVelocity;
@@ -44,10 +54,12 @@ public class DrumStick : MonoBehaviour {
     void OnCollisionEnter(Collision c)
     {
         _selfRigidbody.velocity = Vector3.zero;
+
         //Debug.Log(c.collider.tag.Contains("Drum"));
         if(c.collider.tag.Contains("Drum"))
         {
-            float tmp_acceptableForce = c.gameObject.GetComponent<DrumScript>().AcceptableHittingForce;
+            DrumScript tmp_drum = c.gameObject.GetComponent<DrumScript>();
+            float tmp_acceptableForce = tmp_drum.AcceptableHittingForce;
             if (c.relativeVelocity.magnitude > tmp_acceptableForce)
             {
                 if (HitEffect)
@@ -57,6 +69,7 @@ public class DrumStick : MonoBehaviour {
                     Destroy(tmp_FX, .5f);
                 }
                 device.TriggerHapticPulse(3000);
+                HittedDrumType = tmp_drum.Type;
             }
             else
             {
@@ -76,6 +89,7 @@ public class DrumStick : MonoBehaviour {
         if (c.collider.tag.Contains("Drum"))
         {
             device.TriggerHapticPulse(1000);
+            HittedDrumType = DrumScript.DrumType.NotADrum;
         }
         _lock = false;
     }

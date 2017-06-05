@@ -14,13 +14,35 @@ public class DrumStickControl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetAxis("LeftTrigger") > .9f) {
-            LeftStick.gameObject.SetActive(true);
-            LeftStick.gameObject.SendMessage("Start");
+        
+        if(GetBothDrumHitted() == DrumScript.DrumType.Red)
+        {
+            Debug.Log("Big Red");
+
+        }else if(GetBothDrumHitted() == DrumScript.DrumType.Blue)
+        {
+            Debug.Log("Big Blue");
         }
-		if(Input.GetAxis("RightTrigger") > .9f) {
-            RightStick.gameObject.SetActive(true);
-            RightStick.gameObject.SendMessage("Start");
+    }
+
+    void LeftStickOn()
+    {
+        LeftStick.gameObject.SetActive(true);
+        LeftStick.gameObject.SendMessage("Start");
+    }
+
+    void RightStickOn()
+    {
+        RightStick.gameObject.SetActive(true);
+        RightStick.gameObject.SendMessage("Start");
+    }
+
+    public DrumScript.DrumType GetBothDrumHitted()
+    {
+        if(RightStick.HittedDrumType == LeftStick.HittedDrumType)
+        {
+            return RightStick.HittedDrumType;
         }
+        return DrumScript.DrumType.NotADrum;
     }
 }

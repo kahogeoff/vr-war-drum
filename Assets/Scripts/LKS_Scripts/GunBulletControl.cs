@@ -16,4 +16,12 @@ public class GunBulletControl : MonoBehaviour {
     {
         transform.Translate(Vector3.up * MoveSpeed * Time.deltaTime);
     }
+
+    //void OnTriggerEnter(Collider c)
+    //{
+    //    if (c.CompareTag("Monsters"))
+    //    {
+    //        Destroy(gameObject);
+    //    }
+    //}
 }
