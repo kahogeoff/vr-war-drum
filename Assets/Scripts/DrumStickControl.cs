@@ -14,7 +14,7 @@ public class DrumStickControl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        
+        /*
         if(GetBothDrumHitted() == DrumScript.DrumType.Red)
         {
             Debug.Log("Big Red");
@@ -23,6 +23,7 @@ public class DrumStickControl : MonoBehaviour {
         {
             Debug.Log("Big Blue");
         }
+        */
     }
 
     void LeftStickOn()

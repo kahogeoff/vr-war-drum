@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RocketBulletControl : MonoBehaviour {
-    public float MoveSpeed = 50.0f;
+public class RocketBulletControl : BulletObject
+{
     // Use this for initialization
     void Start () {
-        Destroy(this.gameObject, 5.0f);
-        
+        base.Start();
     }
 	
 	// Update is called once per frame

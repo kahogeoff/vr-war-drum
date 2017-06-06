@@ -32,7 +32,7 @@ public class UIControl : MonoBehaviour {
         foreach (var directory in DirectoryInfo)
         {
             Debug.Log("Directory: " + directory.Name);
-            var subInfo = new DirectoryInfo(path+ directory.Name);
+            var subInfo = new DirectoryInfo(path + directory.Name);
             var subDirectoryInfo = subInfo.GetDirectories();
             foreach (var subDirectory in subDirectoryInfo)
             {

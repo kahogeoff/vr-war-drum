@@ -20,7 +20,7 @@ public class DrumScript : MonoBehaviour {
     public float AcceptableHittingForce = 0.1f;
 
     private List<GameObject> _colliedObjects = new List<GameObject>();
-    private bool _canFire = false;
+    public bool _canFire = false;
 
     public bool selectionMode = true;
     public DrumPosition _drumPosition = DrumPosition.Left;
@@ -79,7 +79,7 @@ public class DrumScript : MonoBehaviour {
     private void OnCollisionEnter(Collision collision)
     {
         //Debug.Log(collision.relativeVelocity.magnitude);
-        if (!_colliedObjects.Contains(collision.gameObject))
+        if (_canFire && !_colliedObjects.Contains(collision.gameObject))
         {
             _colliedObjects.Add(collision.gameObject);
         }

@@ -53,21 +53,23 @@ public class LevelStateManager : MonoBehaviour {
             switch (CurrentState)
             {
                 case LevelState.SongSelection:
-                    if(drumStickControl.GetBothDrumHitted() == DrumScript.DrumType.Red)
+                    if(drumStickControl.GetBothDrumHitted() == DrumScript.DrumType.Red || Input.GetKeyDown(KeyCode.Space))
                     {
                         GameStart();
                     }
                     break;
                 case LevelState.InGame:
                     if (leftDevice.GetPressDown(Valve.VR.EVRButtonId.k_EButton_ApplicationMenu)
-                        || rightDevice.GetPressDown(Valve.VR.EVRButtonId.k_EButton_ApplicationMenu))
+                        || rightDevice.GetPressDown(Valve.VR.EVRButtonId.k_EButton_ApplicationMenu)
+                        || Input.GetKeyDown(KeyCode.Space))
                     {
                         GamePause();
                     }
                     break;
                 case LevelState.Pause:
                     if (leftDevice.GetPressDown(Valve.VR.EVRButtonId.k_EButton_ApplicationMenu)
-                        || rightDevice.GetPressDown(Valve.VR.EVRButtonId.k_EButton_ApplicationMenu))
+                        || rightDevice.GetPressDown(Valve.VR.EVRButtonId.k_EButton_ApplicationMenu)
+                        || Input.GetKeyDown(KeyCode.Space))
                     {
                         GameResume();
                     }

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GunBulletControl : MonoBehaviour {
-    public float MoveSpeed = 50.0f;
+public class GunBulletControl : BulletObject
+{
     // Use this for initialization
     void Start()
     {
-        Destroy(this.gameObject, 5.0f);
+        base.Start();
         transform.eulerAngles = new Vector3(-90, 0, 0);
     }
 

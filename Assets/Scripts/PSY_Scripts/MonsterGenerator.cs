@@ -27,6 +27,9 @@ public class MonsterGenerator : MonoBehaviour
     public int play_index = 0;
     public float flyingtime;
 
+    private float generate_time = 0.0f;
+
+    [Serializable]
     public struct Rhythm
     {
         public int id;
@@ -40,8 +43,8 @@ public class MonsterGenerator : MonoBehaviour
         num_of_monster = 0;
 
         _UIControl = GameObject.Find("UIObject").GetComponent<UIControl>();
-        
 
+        play_index = 0;
         flyingtime = ((hitpoint.position - spawnsite.position).magnitude) / speed;
         //Debug.Log(flyingtime);
     }
@@ -49,8 +52,15 @@ public class MonsterGenerator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        /*
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            switch (stateManager.CurrentState)
+            {
+                case LevelStateManager.LevelState.SongSelection:
+                    SendMessage();
+                    break;
+            }
             InitializeSong();
             if (!audio.isPlaying)
             {
@@ -66,6 +76,7 @@ public class MonsterGenerator : MonoBehaviour
                 PlaybackResume();
             }
         }
+        */
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             audio.Stop();
@@ -75,20 +86,51 @@ public class MonsterGenerator : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (audio.isPlaying)
+        if(stateManager.CurrentState == LevelStateManager.LevelState.InGame)
         {
-            if (audio.time > rhythms[play_index].time - flyingtime)
+            generate_time = rhythms[play_index].time - flyingtime;
+            if (audio.isPlaying)
             {
-                GenerateMonster(rhythms[play_index].id);
-                if (rhythms.Count - 1 > play_index)
-                    play_index++;
+                Debug.Log(string.Format("Time = {0}:{1}", audio.time, rhythms[play_index].time - flyingtime));
+                if (audio.time > generate_time && generate_time > 0)
+                {
+                    GenerateMonster(rhythms[play_index].id);
+                    if (rhythms.Count - 1 > play_index)
+                        play_index++;
+                }
+            }
+            else if (audio.time > audio.clip.length - 1)
+            {
+                SendMessage("GameEnd");
+            }
+            else
+            {
+                if (audio.time == 0)
+                {
+                    if (generate_time < 0)
+                    {
+                        Debug.Log(string.Format("Time = {0}:{1}", audio.time, rhythms[play_index].time - flyingtime));
+                        if (play_index == 0)
+                        {
+                            GenerateMonster(rhythms[play_index].id);
+                            play_index++;
+                            Debug.Log("generate monster " + play_index);
+                        }
+                        else
+                        {
+                            float difference = rhythms[play_index].time - rhythms[play_index - 1].time;
+                            if (difference > Time.fixedDeltaTime)
+                            {
+                                GenerateMonster(rhythms[play_index].id);
+                                play_index++;
+                                Debug.Log("generate monster " + play_index);
+
+                            }
+                        }
+                    }
+                }
             }
         }
-        else if(audio.time > audio.clip.length-1)
-        {
-            SendMessage("GameEnd");
-        }
-
         //Debug.Log(String.Format("Time = {0}/{1}", audio.time, audio.clip.length));
     }
 
@@ -237,6 +279,8 @@ public class MonsterGenerator : MonoBehaviour
     {
         rhythms = new List<Rhythm>();
         Readtja();
+        play_index = 0;
+        generate_time = rhythms[play_index].time - flyingtime;
         audio.clip = Resources.Load<AudioClip>(_UIControl.songFullList[_UIControl.songIdx]);
     }
    
@@ -272,7 +316,7 @@ public class MonsterGenerator : MonoBehaviour
     IEnumerator OnPlaybackStart()
     {
         InitializeSong();
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(4.0f);
         audio.time = 0.0f;
         audio.Play();
     }

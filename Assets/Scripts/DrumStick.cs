@@ -62,7 +62,7 @@ public class DrumStick : MonoBehaviour {
             float tmp_acceptableForce = tmp_drum.AcceptableHittingForce;
             if (c.relativeVelocity.magnitude > tmp_acceptableForce)
             {
-                if (HitEffect)
+                if (HitEffect && tmp_drum._canFire)
                 {
                     GameObject tmp_FX = Instantiate(HitEffect, transform.position, transform.rotation);
                     tmp_FX.transform.localScale = EffectScale;
