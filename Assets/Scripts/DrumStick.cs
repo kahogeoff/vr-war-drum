@@ -66,7 +66,7 @@ public class DrumStick : MonoBehaviour {
                 {
                     GameObject tmp_FX = Instantiate(HitEffect, transform.position, transform.rotation);
                     tmp_FX.transform.localScale = EffectScale;
-                    Destroy(tmp_FX, .5f);
+                    Destroy(tmp_FX, 1.0f);
                 }
                 device.TriggerHapticPulse(3000);
                 HittedDrumType = tmp_drum.Type;
