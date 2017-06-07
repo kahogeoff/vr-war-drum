@@ -12,11 +12,12 @@ public class CalculateScore : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        perfecthitpositions = new Transform[4];
+        perfecthitpositions = new Transform[5];
         perfecthitpositions[0] = GameObject.Find("LeftBullet").transform;
         perfecthitpositions[1] = GameObject.Find("LeftRay").transform;
         perfecthitpositions[2] = GameObject.Find("RightBullet").transform;
         perfecthitpositions[3] = GameObject.Find("RightRay").transform;
+        perfecthitpositions[4] = GameObject.Find("HitYellow").transform;
 
         score = 0;
         maxcombo = 0;
@@ -40,45 +41,49 @@ public class CalculateScore : MonoBehaviour {
                 if ((hitpoint - perfecthitpositions[0].position).magnitude < 1)
                 {
                     Debug.Log("Perfect");
-                    score += 2;
+                    score += 2 * 100 + combo*50;
                 }
                 else
                 {
-                    score++;
+                    score += 1 * 100 + combo * 50;
                 }
                 break;
             case 2:
                 if ((hitpoint - perfecthitpositions[1].position).magnitude < 1)
                 {
                     Debug.Log("Perfect");
-                    score += 2;
+                    score += 2 * 100 + combo * 50;
                 }
                 else
                 {
-                    score++;
+                    score += 1 * 100 + combo * 50;
                 }
                 break;
             case 3:
                 if ((hitpoint - perfecthitpositions[2].position).magnitude < 1)
                 {
                     Debug.Log("Perfect");
-                    score += 2;
+                    score += 2 * 100 + combo * 50;
                 }
                 else
                 {
-                    score++;
+                    score += 1 * 100 + combo * 50;
                 }
                 break;
             case 4:
                 if ((hitpoint - perfecthitpositions[3].position).magnitude < 1)
                 {
                     Debug.Log("Perfect");
-                    score += 2;
+                    score += 2 * 100 + combo * 50;
                 }
                 else
                 {
-                    score++;
+                    score += 1 * 100 + combo * 50;
                 }
+                break;
+            case 5:
+                if ((hitpoint - perfecthitpositions[4].position).magnitude < 1)
+                    score += 1 * 25;
                 break;
         }
         Debug.Log("score: " + score);

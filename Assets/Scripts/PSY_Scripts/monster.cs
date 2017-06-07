@@ -11,20 +11,23 @@ public class monster : MonoBehaviour {
 
     //public EnemyType Type = EnemyType.Red;
 
+    static public bool continuously_beating = false;
     public int myIndex;
     public float speed = 100.0f;
     public GameObject scoreCaculaor;
-
+    public GameObject destroyEffect;
     private Transform[] spawnsites;
     private Transform target;
+    public Vector3 EffectScale = Vector3.one;
 
     // Use this for initialization
     void Start () {
-        spawnsites = new Transform[4];
+        spawnsites = new Transform[5];
         spawnsites[0] = GameObject.FindGameObjectWithTag("SpawnSite1").transform;
         spawnsites[1] = GameObject.FindGameObjectWithTag("SpawnSite2").transform;
         spawnsites[2] = GameObject.FindGameObjectWithTag("SpawnSite3").transform;
         spawnsites[3] = GameObject.FindGameObjectWithTag("SpawnSite4").transform;
+        spawnsites[4] = GameObject.FindGameObjectWithTag("SpawnSite567").transform;
 
         if (transform.position == spawnsites[0].position)
         {
@@ -46,10 +49,13 @@ public class monster : MonoBehaviour {
             myIndex = 4;
             target = GameObject.Find("RightRay").gameObject.transform;
         }
+        else if (transform.position == spawnsites[4].position)
+        {
+            myIndex = 5;
+            target = GameObject.Find("HitYellow").transform;
+        }
         //Debug.Log(target.position);
         //target.position = new Vector3(-4.8F, 1.25F, 10F);
-
-        Destroy(gameObject, 5.0f / (speed/ 100));
 
 		Vector3 relativePos = target.position - transform.position;
 		Quaternion rotation = Quaternion.LookRotation(relativePos);
@@ -57,11 +63,23 @@ public class monster : MonoBehaviour {
 
         scoreCaculaor = GameObject.Find("ScoreCalculator");
 
-        iTween.MoveTo(gameObject, iTween.Hash(
+        if (myIndex != 5)
+        {
+            Destroy(gameObject, 5.0f / (speed / 100));
+            iTween.MoveTo(gameObject, iTween.Hash(
             "position", target.position,
-            "speed",speed,
+            "speed", speed,
             "easetype", iTween.EaseType.linear,
             "oncomplete", "MoveExtraForward"));
+        }
+        else
+        {
+            iTween.MoveTo(gameObject, iTween.Hash(
+            "position", target.position,
+            "speed", speed,
+            "easetype", iTween.EaseType.linear));
+            //"oncomplete", "MoveAway"));
+        }
     }
 
     // Update is called once per frame
@@ -72,6 +90,8 @@ public class monster : MonoBehaviour {
         {
             scoreCaculaor.SendMessage("calCombo", false);
         }
+        MoveAway();
+
     }
 
     void OnTriggerEnter(Collider other)
@@ -132,6 +152,17 @@ public class monster : MonoBehaviour {
                     scoreCaculaor.SendMessage("calCombo", true);
                 }
                 break;
+            case 5:
+                if (other.CompareTag("Ray") || other.CompareTag("Bullet"))
+                {
+                    Destroy(other.gameObject);
+
+                    object[] message = new object[2];
+                    message[0] = myIndex;
+                    message[1] = transform.position;
+                    scoreCaculaor.SendMessage("calScore", message);
+                }
+                break;
         }
 
     }
@@ -142,5 +173,26 @@ public class monster : MonoBehaviour {
             "position", target.position + transform.forward * speed,
             "speed", speed,
             "easetype", iTween.EaseType.linear));
+    }
+
+    void OnDestroy()
+    {
+        //Instantiate(destroyEffect, this.transform);
+        GameObject tmp_destroyEffect = Instantiate(destroyEffect, transform.position, transform.rotation);
+        tmp_destroyEffect.transform.localScale = EffectScale;
+        Destroy(tmp_destroyEffect, .5f);
+
+    }
+
+    void MoveAway()
+    {
+        //Debug.Log("=====MoveAway=====");
+        //Debug.Log(continuously_beating);
+        if (myIndex == 5 && continuously_beating)
+        {
+            Debug.Log("Destroy");
+            Destroy(gameObject);
+            continuously_beating = false;
+        }
     }
 }

@@ -25,11 +25,13 @@ public class DrumScript : MonoBehaviour {
     public bool selectionMode = true;
     public DrumPosition _drumPosition = DrumPosition.Left;
     public UIControl _UIControl;
-
+    public Animator _selfAnim;
+    public string AnimationName;
     // Use this for initialization
     void Start () {
         Generator = GameObject.Find("[LevelManager]").GetComponent<MonsterGenerator>();
         _UIControl = GameObject.Find("UIObject").GetComponent<UIControl>();
+        _selfAnim = GetComponent<Animator>();
     }
 	
 	// Update is called once per frame
@@ -89,6 +91,7 @@ public class DrumScript : MonoBehaviour {
         if (_canFire && tmp_hitForce > AcceptableHittingForce && _colliedObjects.Count < 2)
         {
             gameObject.SendMessage("ShootBullet");
+            _selfAnim.Play(AnimationName, -1, 0f);
         }
     }
 

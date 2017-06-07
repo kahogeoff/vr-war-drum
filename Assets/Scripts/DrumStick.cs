@@ -47,7 +47,10 @@ public class DrumStick : MonoBehaviour {
             _selfRigidbody.angularVelocity = device.angularVelocity;
 
         }
-        else if(!_lock){ _selfRigidbody.velocity = device.velocity; }
+        else if(!_lock){
+            _selfRigidbody.velocity = device.velocity;
+            _selfRigidbody.angularVelocity = device.angularVelocity;
+        }
 
     }
 

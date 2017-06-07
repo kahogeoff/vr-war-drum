@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using UnityEngine.UI;
+using System;
 
 public class UIControl : MonoBehaviour {
     public GameObject UIobject;
@@ -15,7 +16,7 @@ public class UIControl : MonoBehaviour {
     public AudioSource myAudio;
     public bool songPlayed = false;
     public DrumScript[] _DrumScript;
-
+    public string currentSongScore;
     // Use this for initialization
     void Start () {
         _DrumScript =  new DrumScript[4];
@@ -37,7 +38,7 @@ public class UIControl : MonoBehaviour {
             foreach (var subDirectory in subDirectoryInfo)
             {
                 //Debug.Log("\t songDirectory: " + subDirectory.Name);
-                songList.Add(subDirectory.Name);
+                songList.Add(string.Format("{0}\n{1}", subDirectory.Name, directory.Name));
                 //Debug.Log("songs/" + directory.Name + "/" + subDirectory.Name + "/" + subDirectory.Name);
                 songFullList.Add("songs/" + directory.Name + "/" + subDirectory.Name+"/"+ subDirectory.Name);
 
@@ -54,7 +55,8 @@ public class UIControl : MonoBehaviour {
         writer.Close();
         */
         StreamReader scoreReader = new StreamReader(songDirectList[songIdx] + "/score.txt");
-        myText.text = songList[songIdx] + "\nTop score:" + scoreReader.ReadLine();
+        currentSongScore = scoreReader.ReadLine();
+        myText.text = songList[songIdx] + "\nTop score:" + currentSongScore;
         scoreReader.Close();
         myAudio.clip = Resources.Load<AudioClip>(songFullList[songIdx]);
         myAudio.Play();
@@ -101,7 +103,8 @@ public class UIControl : MonoBehaviour {
         if (songIdx == songList.Count)
             songIdx = 0;
         StreamReader scoreReader = new StreamReader(songDirectList[songIdx] + "/score.txt");
-        myText.text = songList[songIdx] + "\nTop score:" + scoreReader.ReadLine();
+        currentSongScore = scoreReader.ReadLine();
+        myText.text = songList[songIdx] + "\nTop score:" + currentSongScore;
         scoreReader.Close();
         myAudio.clip = Resources.Load<AudioClip>(songFullList[songIdx]);
         myAudio.Play();
@@ -113,7 +116,8 @@ public class UIControl : MonoBehaviour {
         if (songIdx == -1)
             songIdx = songList.Count-1;
         StreamReader scoreReader = new StreamReader(songDirectList[songIdx] + "/score.txt");
-        myText.text = songList[songIdx] + "\nTop score:" + scoreReader.ReadLine();
+        currentSongScore = scoreReader.ReadLine();
+        myText.text = songList[songIdx] + "\nTop score:" + currentSongScore;
         scoreReader.Close();
         myAudio.clip = Resources.Load<AudioClip>(songFullList[songIdx]);
         myAudio.Play();
@@ -130,6 +134,14 @@ public class UIControl : MonoBehaviour {
 
     public void SelectBoardAppear()
     {
+        if (CalculateScore.score > Convert.ToInt32(currentSongScore))
+        {
+            StreamWriter scoreWriter = new StreamWriter(songDirectList[songIdx] + "/score.txt");
+            scoreWriter.WriteLine(CalculateScore.score);
+            scoreWriter.Close();
+        }
+        CalculateScore.score = 0;
+        CalculateScore.combo = 0;
         for (int i = 0; i < 4; i++)
             _DrumScript[i].selectionMode = true;
         UIobject2.SetActive(true);

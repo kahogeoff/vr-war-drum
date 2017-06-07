@@ -64,6 +64,11 @@ public class LevelStateManager : MonoBehaviour {
                         || Input.GetKeyDown(KeyCode.Space))
                     {
                         GamePause();
+                    }else if (leftDevice.GetPressDown(Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad)
+                        || rightDevice.GetPressDown(Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad)
+                        || Input.GetKeyDown(KeyCode.Escape))
+                    {
+                        GameEnd();
                     }
                     break;
                 case LevelState.Pause:
