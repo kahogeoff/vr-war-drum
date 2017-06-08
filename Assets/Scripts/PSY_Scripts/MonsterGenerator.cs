@@ -62,6 +62,14 @@ public class MonsterGenerator : MonoBehaviour
 
     void FixedUpdate()
     {
+        if(stateManager.CurrentState == LevelStateManager.LevelState.SongSelection)
+        {
+            if (audio.isPlaying)
+            {
+                audio.Stop();
+            }
+        }
+
         if(stateManager.CurrentState == LevelStateManager.LevelState.InGame)
         {
             if (rhythms.Count < 1 || rhythms == null)
