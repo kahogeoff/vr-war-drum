@@ -1,12 +1,14 @@
-# VR Shooter
+# VR War Drum
 
-The game project of 2017 NCTU course "VR-AR" final project. It should be a FPS game.
+The game project of 2017 NCTU course "VR-AR" final project. It should be a VR clone of Taikojiro.
 
 ## TODOs
 
-- [ ] Weapon System
-- [ ] Enemy AI
-- [ ] Enviroment & Level Design
+- [x] TJA phaser and loader
+- [x] Drum hit
+- [x] Enemy spawning
+- [x] Enviroment & enemies design
+- [ ] Bug fix
 - [ ] etc.
 
 ## Useful Documents
