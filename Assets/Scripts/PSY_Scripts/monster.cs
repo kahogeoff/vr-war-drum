@@ -178,6 +178,11 @@ public class monster : MonoBehaviour {
     void OnDestroy()
     {
         //Instantiate(destroyEffect, this.transform);
+        if(CalculateScore.combo >= 5)
+        {
+            GameObject.FindGameObjectWithTag("LevelManager").SendMessage("TextPopup", transform);
+        }
+
         GameObject tmp_destroyEffect = Instantiate(destroyEffect, transform.position, transform.rotation);
         tmp_destroyEffect.transform.localScale = EffectScale;
         Destroy(tmp_destroyEffect, .5f);
