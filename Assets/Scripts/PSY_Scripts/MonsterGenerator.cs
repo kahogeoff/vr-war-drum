@@ -28,6 +28,7 @@ public class MonsterGenerator : MonoBehaviour
     private float generate_time = 0.0f;
     private float game_time = -4.0f;
     private bool continuously_beating_end = false;
+    private bool continuous_s = false;
     private float continuous_e = 0.0f;
 
     [Serializable]
@@ -81,17 +82,17 @@ public class MonsterGenerator : MonoBehaviour
             generate_time = rhythms[play_index].time - flyingtime;
             if (audio.isPlaying)
             {
-                Debug.Log(string.Format("Time = {0}:{1}", audio.time, rhythms[play_index].time - flyingtime));
+                //Debug.Log(string.Format("Time = {0}:{1}", audio.time, rhythms[play_index].time - flyingtime));
                 if (audio.time > generate_time && generate_time > 0)
                 {
                     GenerateMonster(rhythms[play_index].id, play_index);
                     if (rhythms.Count - 1 > play_index)
                         play_index++;
                 }
-                if (audio.time > continuous_e && continuous_e != 0)
+                if (audio.time > continuous_e && continuous_e != 0.0f)
                 {
                     monster.continuously_beating = true;
-                    continuous_e = 0;
+                    continuous_e = 0.0f;
                 }
             }
             else
@@ -185,17 +186,31 @@ public class MonsterGenerator : MonoBehaviour
                 Instantiate(monsters[3], spawnsites[1].position, Quaternion.identity);
                 break;
             case 5:
-                Instantiate(monsters[4], spawnsites[4].position, Quaternion.identity);
+                if (!continuous_s)
+                {
+                    continuous_s = true;
+                    Instantiate(monsters[4], spawnsites[4].position, Quaternion.identity);
+                }
                 break;
             case 6:
-                Instantiate(monsters[4], spawnsites[4].position, Quaternion.identity);
+                if (!continuous_s)
+                {
+                    continuous_s = true;
+                    Instantiate(monsters[4], spawnsites[4].position, Quaternion.identity);
+                }
                 break;
             case 7:
-                Instantiate(monsters[4], spawnsites[4].position, Quaternion.identity);
+                if (!continuous_s)
+                {
+                    continuous_s = true;
+                    Instantiate(monsters[4], spawnsites[4].position, Quaternion.identity);
+                }
                 break;
             case 8:
                 // End of continuous hitting
                 //Instantiate (monster8, transform.position, Quaternion.identity);
+                //Debug.Log("----------meet 8------------");
+                continuous_s = false;
                 continuously_beating_end = true;
                 break;
             case 9:
@@ -224,12 +239,14 @@ public class MonsterGenerator : MonoBehaviour
         {
             Debug.Log("No existing file.");
         }
-        else {
+        else
+        {
             string line;
             float bpm = 0.0f;
             float crotchet = 0.0f;
+            float quaver = 0.0f;
             float offset = 0.0f;
-            int bar = 0;
+            float bar_time = 0.0f;
             float t = 0.0f;   // time for beats
 
             System.IO.StreamReader file = new System.IO.StreamReader(@path);
@@ -237,6 +254,10 @@ public class MonsterGenerator : MonoBehaviour
             {
                 Match m1 = regex1.Match(line);
                 Match m2 = regex2.Match(line);
+                string pattern4 = @"#[A-Z]* [0-9]+\.[0-9]+";
+                Regex regex4 = new Regex(pattern4);
+                string pattern5 = @"#[A-Z]* [0-9]/[0-9]";
+                Regex regex5 = new Regex(pattern5);
 
                 if (m2.Success)
                 {
@@ -247,7 +268,6 @@ public class MonsterGenerator : MonoBehaviour
                             Match m3 = regex3.Match(line);
                             if (m3.Success)
                             {
-                                ++bar;
                                 string hits = Regex.Replace(line, ",", "");
                                 for (int i = 0; i < hits.Length; i++)
                                 {
@@ -256,13 +276,28 @@ public class MonsterGenerator : MonoBehaviour
                                     tmp.id = (int)Char.GetNumericValue(hits[i]);
                                     tmp.time = t;
                                     rhythms.Add(tmp);
-                                    t += crotchet * 4 / hits.Length;
+                                    t += bar_time / hits.Length;
                                 }
                             }
                             else {
                                 if (line == "#END")
                                 {
                                     break;
+                                }
+
+                                Match m4 = regex4.Match(line);
+                                if (m4.Success)
+                                {
+                                    string[] words = line.Split(' ');
+                                    t += float.Parse(words[1]);
+                                }
+                                Match m5 = regex5.Match(line);
+                                if (m5.Success)
+                                {
+                                    string[] words = line.Split(' ');
+                                    string[] fractions = words[1].Split('/');
+                                    float measure = float.Parse(fractions[0]) / float.Parse(fractions[1]);
+                                    bar_time *= measure;
                                 }
                             }
                         }
@@ -278,6 +313,9 @@ public class MonsterGenerator : MonoBehaviour
                     {
                         bpm = float.Parse(items[1]);
                         crotchet = 60 / bpm;
+
+                        quaver = crotchet / 2;
+                        bar_time = crotchet * 4;
                     }
                     if (items[0] == "OFFSET")
                     {
@@ -328,7 +366,7 @@ public class MonsterGenerator : MonoBehaviour
         game_time = 0;
 
         //_UIControl.SelectBoardAppear();
-        Debug.Log("Score: " + finalScore + "%");
+        //Debug.Log("Score: " + finalScore + "%");
         Debug.Log("Max combo: " + CalculateScore.maxcombo);
         Debug.Log("-------------------END------------------");
 

@@ -25,6 +25,7 @@ public class LevelStateManager : MonoBehaviour {
     // Use this for initialization
     void Start() {
         CurrentState = LevelState.SongSelection;
+
         leftDevice = SteamVR_Controller.Input((int)leftController.index);
         rightDevice = SteamVR_Controller.Input((int)rightController.index);
     }
@@ -69,6 +70,7 @@ public class LevelStateManager : MonoBehaviour {
                         || Input.GetKeyDown(KeyCode.Escape))
                     {
                         GameEnd();
+                        CleanScreen();
                     }
                     break;
                 case LevelState.Pause:
@@ -108,7 +110,14 @@ public class LevelStateManager : MonoBehaviour {
         SendMessage("PlaybackResume");
         ChangeState(LevelState.InGame);
     }
-    
+    void CleanScreen()
+    {
+        GameObject[] tmp_monsterList = GameObject.FindGameObjectsWithTag("Monsters");
+        foreach (GameObject monster in tmp_monsterList)
+        {
+            Destroy(monster);
+        }
+    }
     void GameEnd()
     {
         SendMessage("PlaybackEnd");

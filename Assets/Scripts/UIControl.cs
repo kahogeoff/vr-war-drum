@@ -54,10 +54,12 @@ public class UIControl : MonoBehaviour {
         writer.WriteLine("0");
         writer.Close();
         */
+        
         StreamReader scoreReader = new StreamReader(songDirectList[songIdx] + "/score.txt");
         currentSongScore = scoreReader.ReadLine();
         myText.text = songList[songIdx] + "\nTop score:" + currentSongScore;
         scoreReader.Close();
+
         myAudio.clip = Resources.Load<AudioClip>(songFullList[songIdx]);
         myAudio.Play();
     }
@@ -100,26 +102,28 @@ public class UIControl : MonoBehaviour {
     public void ChangeSongRight()
     {
         songIdx++;
-        if (songIdx == songList.Count)
+        if (songIdx >= songList.Count)
             songIdx = 0;
         StreamReader scoreReader = new StreamReader(songDirectList[songIdx] + "/score.txt");
         currentSongScore = scoreReader.ReadLine();
         myText.text = songList[songIdx] + "\nTop score:" + currentSongScore;
         scoreReader.Close();
         myAudio.clip = Resources.Load<AudioClip>(songFullList[songIdx]);
+        Debug.Log("Current Song: " + myAudio.clip.name);
         myAudio.Play();
     }
 
     public void ChangeSongLeft()
     {
         songIdx--;
-        if (songIdx == -1)
+        if (songIdx < 0)
             songIdx = songList.Count-1;
         StreamReader scoreReader = new StreamReader(songDirectList[songIdx] + "/score.txt");
         currentSongScore = scoreReader.ReadLine();
         myText.text = songList[songIdx] + "\nTop score:" + currentSongScore;
         scoreReader.Close();
         myAudio.clip = Resources.Load<AudioClip>(songFullList[songIdx]);
+        Debug.Log("Current Song: " + myAudio.clip.name);
         myAudio.Play();
     }
 
