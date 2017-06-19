@@ -17,6 +17,7 @@ public class UIControl : MonoBehaviour {
     public bool songPlayed = false;
     public DrumScript[] _DrumScript;
     public string currentSongScore;
+
     // Use this for initialization
     void Start () {
         _DrumScript =  new DrumScript[4];
@@ -60,8 +61,11 @@ public class UIControl : MonoBehaviour {
         myText.text = songList[songIdx] + "\nTop score:" + currentSongScore;
         scoreReader.Close();
 
+        StartCoroutine("LoadAudioFile", songFullList[songIdx]);
+        /*
         myAudio.clip = Resources.Load<AudioClip>(songFullList[songIdx]);
         myAudio.Play();
+        */
     }
 	
 	// Update is called once per frame
@@ -108,9 +112,11 @@ public class UIControl : MonoBehaviour {
         currentSongScore = scoreReader.ReadLine();
         myText.text = songList[songIdx] + "\nTop score:" + currentSongScore;
         scoreReader.Close();
-        myAudio.clip = Resources.Load<AudioClip>(songFullList[songIdx]);
-        Debug.Log("Current Song: " + myAudio.clip.name);
-        myAudio.Play();
+
+        StartCoroutine("LoadAudioFile", songFullList[songIdx]);
+        //myAudio.clip = Resources.Load<AudioClip>(songFullList[songIdx]);
+        //Debug.Log("Current Song: " + myAudio.clip.name);
+        //myAudio.Play();
     }
 
     public void ChangeSongLeft()
@@ -122,9 +128,11 @@ public class UIControl : MonoBehaviour {
         currentSongScore = scoreReader.ReadLine();
         myText.text = songList[songIdx] + "\nTop score:" + currentSongScore;
         scoreReader.Close();
-        myAudio.clip = Resources.Load<AudioClip>(songFullList[songIdx]);
-        Debug.Log("Current Song: " + myAudio.clip.name);
-        myAudio.Play();
+
+        StartCoroutine("LoadAudioFile", songFullList[songIdx]);
+        //myAudio.clip = Resources.Load<AudioClip>(songFullList[songIdx]);
+        //Debug.Log("Current Song: " + myAudio.clip.name);
+        //myAudio.Play();
     }
 
     public void SelectBoardDissappear()
@@ -132,6 +140,9 @@ public class UIControl : MonoBehaviour {
         for(int i =0;i<4;i++)
             _DrumScript[i].selectionMode = false;
         UIobject2.SetActive(false);
+
+        //StopCoroutine("LoadAudioFile");
+        StopAllCoroutines();
         myAudio.Stop();
         Debug.Log(songList[songIdx]);
     }
@@ -152,7 +163,53 @@ public class UIControl : MonoBehaviour {
         StreamReader scoreReader = new StreamReader(songDirectList[songIdx] + "/score.txt");
         myText.text = songList[songIdx] + "\nTop score:" + scoreReader.ReadLine();
         scoreReader.Close();
-        myAudio.clip = Resources.Load<AudioClip>(songFullList[songIdx]);
+
+        StartCoroutine("LoadAudioFile", songFullList[songIdx]);
+        //myAudio.clip = Resources.Load<AudioClip>(songFullList[songIdx]);
+        //myAudio.Play();
+    }
+
+    public IEnumerator LoadAudioFile(string pathWithoutEx)
+    {
+        string tmp_extention = "";
+        string tmp_runTimePath = Application.dataPath;
+
+        if(Application.platform == RuntimePlatform.WindowsEditor ||
+           Application.platform == RuntimePlatform.LinuxEditor ||
+           Application.platform == RuntimePlatform.OSXEditor)
+        {
+            tmp_runTimePath = Application.dataPath ;
+        }
+        else
+        {
+            tmp_runTimePath =  Application.dataPath + "/../Assets/";
+        }
+
+        if(File.Exists(tmp_runTimePath + "/Resources/" + pathWithoutEx + ".ogg"))
+        {
+            tmp_extention = ".ogg";
+        }else if (File.Exists(tmp_runTimePath + "/Resources/" + pathWithoutEx + ".wav"))
+        {
+            tmp_extention = ".wav";
+        }else if (File.Exists(tmp_runTimePath + "/Resources/" + pathWithoutEx + ".mp3"))
+        {
+            tmp_extention = ".mp3";
+        }
+        else
+        {
+            Debug.LogError("No audio file, path: " + tmp_runTimePath + "/Resources/" + pathWithoutEx);
+            yield return null;
+        }
+        WWW wwwRequest = new WWW("file://" + tmp_runTimePath + "/Resources/" + pathWithoutEx + tmp_extention);
+
+        AudioClip tmp_clip = wwwRequest.GetAudioClip();
+        while (tmp_clip.loadState != AudioDataLoadState.Loaded)
+        {
+            //Debug.Log(tmp_clip.loadState);
+            yield return wwwRequest;
+        }
+        tmp_clip.name = pathWithoutEx.Substring(pathWithoutEx.LastIndexOf('/') + 1);
+        myAudio.clip = tmp_clip;
         myAudio.Play();
     }
 }

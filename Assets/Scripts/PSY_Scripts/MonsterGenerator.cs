@@ -337,7 +337,7 @@ public class MonsterGenerator : MonoBehaviour
         game_time = -flyingtime;
         //Debug.Log(rhythms.Count);
         //generate_time = rhythms[play_index].time - flyingtime;
-        audio.clip = Resources.Load<AudioClip>(_UIControl.songFullList[_UIControl.songIdx]);
+        audio.clip = _UIControl.myAudio.clip;//Resources.Load<AudioClip>(songFullList[_UIControl.songIdx]);
     }
    
     void PlaybackStart()
