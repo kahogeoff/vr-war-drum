@@ -14,6 +14,7 @@ public class UIControl : MonoBehaviour {
     public List<string> songFullList;
     public List<string> songDirectList;
     public AudioSource myAudio;
+    public AudioClip[] loadedClips;
     public bool songPlayed = false;
     public DrumScript[] _DrumScript;
     public string currentSongScore;
@@ -51,21 +52,25 @@ public class UIControl : MonoBehaviour {
         }
         Debug.Log("songs number: " + songDirectList.Count);
 
+        loadedClips = new AudioClip[songDirectList.Count];
         /*StreamWriter writer = new StreamWriter(songDirectList[0] + "/score.txt");
         writer.WriteLine("0");
         writer.Close();
         */
-        
+
+        foreach (string songPath in songFullList)
+        {
+            StartCoroutine(LoadAudioFile(songPath,songFullList.IndexOf(songPath)));
+        }
+
         StreamReader scoreReader = new StreamReader(songDirectList[songIdx] + "/score.txt");
         currentSongScore = scoreReader.ReadLine();
         myText.text = songList[songIdx] + "\nTop score:" + currentSongScore;
         scoreReader.Close();
 
-        StartCoroutine("LoadAudioFile", songFullList[songIdx]);
-        /*
-        myAudio.clip = Resources.Load<AudioClip>(songFullList[songIdx]);
+        //StartCoroutine("LoadAudioFile", songFullList[songIdx]);
+        myAudio.clip = loadedClips[songIdx];
         myAudio.Play();
-        */
     }
 	
 	// Update is called once per frame
@@ -113,10 +118,13 @@ public class UIControl : MonoBehaviour {
         myText.text = songList[songIdx] + "\nTop score:" + currentSongScore;
         scoreReader.Close();
 
-        StartCoroutine("LoadAudioFile", songFullList[songIdx]);
+        //StartCoroutine("LoadAudioFile", songFullList[songIdx]);
         //myAudio.clip = Resources.Load<AudioClip>(songFullList[songIdx]);
         //Debug.Log("Current Song: " + myAudio.clip.name);
         //myAudio.Play();
+
+        myAudio.clip = loadedClips[songIdx];
+        myAudio.Play();
     }
 
     public void ChangeSongLeft()
@@ -129,10 +137,13 @@ public class UIControl : MonoBehaviour {
         myText.text = songList[songIdx] + "\nTop score:" + currentSongScore;
         scoreReader.Close();
 
-        StartCoroutine("LoadAudioFile", songFullList[songIdx]);
+        //StartCoroutine("LoadAudioFile", songFullList[songIdx]);
         //myAudio.clip = Resources.Load<AudioClip>(songFullList[songIdx]);
         //Debug.Log("Current Song: " + myAudio.clip.name);
         //myAudio.Play();
+
+        myAudio.clip = loadedClips[songIdx];
+        myAudio.Play();
     }
 
     public void SelectBoardDissappear()
@@ -142,7 +153,7 @@ public class UIControl : MonoBehaviour {
         UIobject2.SetActive(false);
 
         //StopCoroutine("LoadAudioFile");
-        StopAllCoroutines();
+        //StopAllCoroutines();
         myAudio.Stop();
         Debug.Log(songList[songIdx]);
     }
@@ -169,7 +180,7 @@ public class UIControl : MonoBehaviour {
         //myAudio.Play();
     }
 
-    public IEnumerator LoadAudioFile(string pathWithoutEx)
+    public IEnumerator LoadAudioFile(string pathWithoutEx, int index)
     {
         string tmp_extention = "";
         string tmp_runTimePath = Application.dataPath;
@@ -198,7 +209,7 @@ public class UIControl : MonoBehaviour {
         else
         {
             Debug.LogError("No audio file, path: " + tmp_runTimePath + "/Resources/" + pathWithoutEx);
-            yield return null;
+            yield break;
         }
         WWW wwwRequest = new WWW("file://" + tmp_runTimePath + "/Resources/" + pathWithoutEx + tmp_extention);
 
@@ -209,7 +220,8 @@ public class UIControl : MonoBehaviour {
             yield return wwwRequest;
         }
         tmp_clip.name = pathWithoutEx.Substring(pathWithoutEx.LastIndexOf('/') + 1);
-        myAudio.clip = tmp_clip;
-        myAudio.Play();
+        loadedClips[index] = tmp_clip;
+        //myAudio.clip = tmp_clip;
+        //myAudio.Play();
     }
 }

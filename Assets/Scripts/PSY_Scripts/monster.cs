@@ -74,11 +74,13 @@ public class monster : MonoBehaviour {
         }
         else
         {
+            ToggleCollider(false);
             iTween.MoveTo(gameObject, iTween.Hash(
             "position", target.position,
             "speed", speed,
-            "easetype", iTween.EaseType.linear));
-            //"oncomplete", "MoveAway"));
+            "easetype", iTween.EaseType.linear,//));
+            "oncomplete", "ToggleCollider",
+            "oncompleteparams", true));
         }
     }
 
@@ -199,5 +201,10 @@ public class monster : MonoBehaviour {
             Destroy(gameObject);
             continuously_beating = false;
         }
+    }
+
+    void ToggleCollider(bool state)
+    {
+        GetComponent<Collider>().enabled = state;
     }
 }
