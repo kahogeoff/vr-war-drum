@@ -79,6 +79,7 @@ public class LevelStateManager : MonoBehaviour {
                         || rightDevice.GetPressDown(Valve.VR.EVRButtonId.k_EButton_ApplicationMenu)
                         || Input.GetKeyDown(KeyCode.Escape))
                     {
+                        GameResume();
                         GameEnd();
                         CleanScreen();
                     }

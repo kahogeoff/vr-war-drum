@@ -16,9 +16,12 @@ public class monster : MonoBehaviour {
     public float speed = 100.0f;
     public GameObject scoreCaculaor;
     public GameObject destroyEffect;
+    public GameObject HitNotice;
+    public Vector3 EffectScale = Vector3.one;
+    public Vector2 HitNoticeRange = new Vector2(3.0f, 0.8f);
+
     private Transform[] spawnsites;
     private Transform target;
-    public Vector3 EffectScale = Vector3.one;
 
     // Use this for initialization
     void Start () {
@@ -63,6 +66,17 @@ public class monster : MonoBehaviour {
 
         scoreCaculaor = GameObject.Find("ScoreCalculator");
 
+        if(HitNotice != null)
+        {
+            GameObject tmp_HitNotice = Instantiate<GameObject>(HitNotice, transform);
+            float tmp_time = Vector3.Distance(target.position, transform.position)/ speed;
+            tmp_HitNotice.transform.localScale = Vector3.one * HitNoticeRange.x;
+            iTween.ScaleTo(tmp_HitNotice, iTween.Hash(
+                "scale", Vector3.one * HitNoticeRange.y,
+                "time", tmp_time,
+                "easetype", iTween.EaseType.linear));
+        }
+
         if (myIndex != 5)
         {
             Destroy(gameObject, 5.0f / (speed / 100));
@@ -86,8 +100,8 @@ public class monster : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-		//transform.Translate (Vector3.forward * speed * Time.deltaTime);
-
+        //transform.Translate (Vector3.forward * speed * Time.deltaTime);
+        Debug.Log(continuously_beating);
         if(transform.position.z > 0.0f)
         {
             scoreCaculaor.SendMessage("calCombo", false);

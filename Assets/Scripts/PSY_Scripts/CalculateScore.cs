@@ -40,7 +40,7 @@ public class CalculateScore : MonoBehaviour {
             case 1:
                 if ((hitpoint - perfecthitpositions[0].position).magnitude < 1)
                 {
-                    Debug.Log("Perfect");
+                    //Debug.Log("Perfect");
                     score += 2 * 100 + combo*50;
                 }
                 else
@@ -51,7 +51,7 @@ public class CalculateScore : MonoBehaviour {
             case 2:
                 if ((hitpoint - perfecthitpositions[1].position).magnitude < 1)
                 {
-                    Debug.Log("Perfect");
+                    //Debug.Log("Perfect");
                     score += 2 * 100 + combo * 50;
                 }
                 else
@@ -62,7 +62,7 @@ public class CalculateScore : MonoBehaviour {
             case 3:
                 if ((hitpoint - perfecthitpositions[2].position).magnitude < 1)
                 {
-                    Debug.Log("Perfect");
+                    //Debug.Log("Perfect");
                     score += 2 * 100 + combo * 50;
                 }
                 else
@@ -73,7 +73,7 @@ public class CalculateScore : MonoBehaviour {
             case 4:
                 if ((hitpoint - perfecthitpositions[3].position).magnitude < 1)
                 {
-                    Debug.Log("Perfect");
+                    //Debug.Log("Perfect");
                     score += 2 * 100 + combo * 50;
                 }
                 else
@@ -86,7 +86,7 @@ public class CalculateScore : MonoBehaviour {
                     score += 1 * 25;
                 break;
         }
-        Debug.Log("score: " + score);
+        //Debug.Log("score: " + score);
     }
 
     void calCombo(bool comboing)
@@ -103,6 +103,6 @@ public class CalculateScore : MonoBehaviour {
         {
             combo++;
         }
-        Debug.Log("combo: " + combo);
+        //Debug.Log("combo: " + combo);
     }
 }

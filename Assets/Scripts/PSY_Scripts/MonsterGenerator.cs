@@ -96,6 +96,8 @@ public class MonsterGenerator : MonoBehaviour
                     monster.continuously_beating = true;
                     continuous_e = 0.0f;
                 }
+
+                Debug.Log(string.Format("End to continuous: {0} && {1}", audio.time, continuous_e));
             }
             else
             {
@@ -214,6 +216,7 @@ public class MonsterGenerator : MonoBehaviour
                 //Debug.Log("----------meet 8------------");
                 continuous_s = false;
                 continuously_beating_end = true;
+                //Debug.Log("888888888888888888888");
                 break;
             case 9:
                 //Instantiate (monster9, transform.position, Quaternion.identity);
@@ -270,15 +273,25 @@ public class MonsterGenerator : MonoBehaviour
                             Match m3 = regex3.Match(line);
                             if (m3.Success)
                             {
-                                string hits = Regex.Replace(line, ",", "");
-                                for (int i = 0; i < hits.Length; i++)
+                                if (line == ",")
                                 {
-                                    //Debug.Log (hits[i].GetType());
-                                    Rhythm tmp;
-                                    tmp.id = (int)Char.GetNumericValue(hits[i]);
-                                    tmp.time = t;
-                                    rhythms.Add(tmp);
-                                    t += bar_time / hits.Length;
+                                    Debug.Log(line);
+                                    t += bar_time;
+                                }
+                                else
+                                {
+                                    string[] words = line.Split(',');
+                                    Debug.Log(words[0]);
+                                    //string hits = Regex.Replace(line, ",", "");
+                                    for (int i = 0; i < words[0].Length; i++)
+                                    {
+                                        //Debug.Log (hits[i].GetType());
+                                        Rhythm tmp;
+                                        tmp.id = (int)Char.GetNumericValue(words[0][i]);
+                                        tmp.time = t;
+                                        rhythms.Add(tmp);
+                                        t += bar_time / words[0].Length;
+                                    }
                                 }
                             }
                             else {
@@ -291,8 +304,19 @@ public class MonsterGenerator : MonoBehaviour
                                 if (m4.Success)
                                 {
                                     string[] words = line.Split(' ');
-                                    t += float.Parse(words[1]);
+                                    if (words[0] == "#DELAY")
+                                    {
+                                        t += float.Parse(words[1]);
+                                    }
+                                    else if (words[0] == "#BPMCHANGE")
+                                    {
+                                        bpm = float.Parse(words[1]);
+                                        crotchet = 60 / bpm;
+                                        quaver = crotchet / 2;
+                                        bar_time = crotchet * 4;
+                                    }
                                 }
+
                                 Match m5 = regex5.Match(line);
                                 if (m5.Success)
                                 {
