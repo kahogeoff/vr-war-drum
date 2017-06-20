@@ -157,7 +157,7 @@ public class monster : MonoBehaviour {
             case 5:
                 if (other.CompareTag("Ray") || other.CompareTag("Bullet"))
                 {
-                    Destroy(other.gameObject);
+                    //Destroy(other.gameObject);
 
                     object[] message = new object[2];
                     message[0] = myIndex;
@@ -180,10 +180,7 @@ public class monster : MonoBehaviour {
     void OnDestroy()
     {
         //Instantiate(destroyEffect, this.transform);
-        if(CalculateScore.combo >= 5)
-        {
-            GameObject.FindGameObjectWithTag("LevelManager").SendMessage("TextPopup", transform);
-        }
+        GameObject.FindGameObjectWithTag("LevelManager").SendMessage("TextPopup", transform);
 
         GameObject tmp_destroyEffect = Instantiate(destroyEffect, transform.position, transform.rotation);
         tmp_destroyEffect.transform.localScale = EffectScale;

@@ -18,6 +18,7 @@ public class MonsterGenerator : MonoBehaviour
     static public float finalScore;
 
     public UIControl _UIControl;
+    public SongListLoader _SongListLoader;
     public int play_index = 0;
     public float flyingtime;
 
@@ -45,6 +46,7 @@ public class MonsterGenerator : MonoBehaviour
         num_of_monster = 0;
 
         _UIControl = GameObject.Find("UIObject").GetComponent<UIControl>();
+        _SongListLoader = GameObject.Find("UIObject").GetComponent<SongListLoader>();
 
         play_index = 0;
         flyingtime = ((hitpoint.position - spawnsite.position).magnitude) / speed;
@@ -230,7 +232,7 @@ public class MonsterGenerator : MonoBehaviour
         Regex regex2 = new Regex(pattern2);
         Regex regex3 = new Regex(pattern3);
 
-        string path = /*Application.dataPath +*/ "Assets/Resources/"+_UIControl.songFullList[_UIControl.songIdx] + ".tja";
+        string path = /*Application.dataPath + "Assets/Resources/"+*/ _SongListLoader.songList[_UIControl.songIdx].songPath + "/" + _SongListLoader.songList[_UIControl.songIdx].name + ".tja";
         //string path = Application.dataPath + "/Resources/Blade of Hope/Blade of Hope.tja";
 
         Debug.Log(path);
@@ -337,7 +339,7 @@ public class MonsterGenerator : MonoBehaviour
         game_time = -flyingtime;
         //Debug.Log(rhythms.Count);
         //generate_time = rhythms[play_index].time - flyingtime;
-        audio.clip = _UIControl.loadedClips[_UIControl.songIdx];//Resources.Load<AudioClip>(songFullList[_UIControl.songIdx]);
+        audio.clip = _SongListLoader.songList[_UIControl.songIdx].clip;//Resources.Load<AudioClip>(songFullList[_UIControl.songIdx]);
     }
    
     void PlaybackStart()

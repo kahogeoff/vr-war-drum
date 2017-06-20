@@ -62,20 +62,28 @@ public class LevelStateManager : MonoBehaviour {
                 case LevelState.InGame:
                     if (leftDevice.GetPressDown(Valve.VR.EVRButtonId.k_EButton_ApplicationMenu)
                         || rightDevice.GetPressDown(Valve.VR.EVRButtonId.k_EButton_ApplicationMenu)
-                        || Input.GetKeyDown(KeyCode.Space))
-                    {
-                        GamePause();
-                    }else if (leftDevice.GetPressDown(Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad)
-                        || rightDevice.GetPressDown(Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad)
                         || Input.GetKeyDown(KeyCode.Escape))
                     {
                         GameEnd();
                         CleanScreen();
                     }
+                    else if (leftDevice.GetPressDown(Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad)
+                        || rightDevice.GetPressDown(Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad)
+                        || Input.GetKeyDown(KeyCode.Space))
+                    {
+                        GamePause();
+                    }
                     break;
                 case LevelState.Pause:
                     if (leftDevice.GetPressDown(Valve.VR.EVRButtonId.k_EButton_ApplicationMenu)
                         || rightDevice.GetPressDown(Valve.VR.EVRButtonId.k_EButton_ApplicationMenu)
+                        || Input.GetKeyDown(KeyCode.Escape))
+                    {
+                        GameEnd();
+                        CleanScreen();
+                    }
+                    else if (leftDevice.GetPressDown(Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad)
+                        || rightDevice.GetPressDown(Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad)
                         || Input.GetKeyDown(KeyCode.Space))
                     {
                         GameResume();

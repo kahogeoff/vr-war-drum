@@ -35,11 +35,11 @@ public class SongListLoader : MonoBehaviour {
     public List<SongListItem> songList = new List<SongListItem>();
     public AudioSource myAudio;
 
-    [SerializeField]
+    public string callBackMessage = "";
+    //[SerializeField]
     private string _runtimePath;
     // Use this for initialization
-    void Start () {
-        songList = new List<SongListItem>();
+    void Awake () {
 
         if (Application.platform == RuntimePlatform.WindowsEditor ||
            Application.platform == RuntimePlatform.LinuxEditor ||
@@ -51,8 +51,8 @@ public class SongListLoader : MonoBehaviour {
         {
             _runtimePath = Application.dataPath + "/../Assets/";
         }
-        LoadSongList();
-
+        //LoadSongList();
+        Time.timeScale = 0.0f;
     }
 	
 	// Update is called once per frame
@@ -60,8 +60,9 @@ public class SongListLoader : MonoBehaviour {
 		
 	}
 
-    void LoadSongList()
+    public void LoadSongList()
     {
+        songList = new List<SongListItem>();
         string tmp_pathPrefix = _runtimePath + songPath; 
         DirectoryInfo tmp_directoryInfo = new DirectoryInfo(tmp_pathPrefix);
         DirectoryInfo[] tmp_subDirectoriesInfo = tmp_directoryInfo.GetDirectories();
@@ -99,7 +100,11 @@ public class SongListLoader : MonoBehaviour {
             StartCoroutine("LoadAudioFile", item);
             yield return null;
         }
+        if (!string.IsNullOrEmpty(callBackMessage)) {
+            SendMessage(callBackMessage);
+        }
 
+        Time.timeScale = 1.0f;
     }
 
     public IEnumerator LoadAudioFile(SongListItem songListItem)

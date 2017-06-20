@@ -10,11 +10,14 @@ public class UIControl : MonoBehaviour {
     public GameObject UIobject2;
     public Text myText;
     public int songIdx = 0;
+    /*
     public List<string> songList;
     public List<string> songFullList;
     public List<string> songDirectList;
-    public AudioSource myAudio;
     public AudioClip[] loadedClips;
+    */
+    public AudioSource myAudio;
+    public SongListLoader songListLoader;
     public bool songPlayed = false;
     public DrumScript[] _DrumScript;
     public string currentSongScore;
@@ -26,6 +29,7 @@ public class UIControl : MonoBehaviour {
         _DrumScript[1] = GameObject.Find("RedDrum1").GetComponent<DrumScript>();
         _DrumScript[2] = GameObject.Find("BlueDrum2").GetComponent<DrumScript>();
         _DrumScript[3] = GameObject.Find("RedDrum2").GetComponent<DrumScript>();
+        /*
         songList = new List<string>();
         songFullList = new List<string>();
         songDirectList = new List<string>();
@@ -53,10 +57,10 @@ public class UIControl : MonoBehaviour {
         Debug.Log("songs number: " + songDirectList.Count);
 
         loadedClips = new AudioClip[songDirectList.Count];
-        /*StreamWriter writer = new StreamWriter(songDirectList[0] + "/score.txt");
+        
+        StreamWriter writer = new StreamWriter(songDirectList[0] + "/score.txt");
         writer.WriteLine("0");
         writer.Close();
-        */
 
         foreach (string songPath in songFullList)
         {
@@ -70,7 +74,9 @@ public class UIControl : MonoBehaviour {
 
         //StartCoroutine("LoadAudioFile", songFullList[songIdx]);
         myAudio.clip = loadedClips[songIdx];
-        myAudio.Play();
+        */
+        songListLoader.LoadSongList();
+        //myAudio.Play();
     }
 	
 	// Update is called once per frame
@@ -111,19 +117,23 @@ public class UIControl : MonoBehaviour {
     public void ChangeSongRight()
     {
         songIdx++;
-        if (songIdx >= songList.Count)
+        if (songIdx >= songListLoader.songList.Count)
             songIdx = 0;
+        /*
         StreamReader scoreReader = new StreamReader(songDirectList[songIdx] + "/score.txt");
         currentSongScore = scoreReader.ReadLine();
         myText.text = songList[songIdx] + "\nTop score:" + currentSongScore;
         scoreReader.Close();
+        */
 
         //StartCoroutine("LoadAudioFile", songFullList[songIdx]);
         //myAudio.clip = Resources.Load<AudioClip>(songFullList[songIdx]);
         //Debug.Log("Current Song: " + myAudio.clip.name);
         //myAudio.Play();
 
-        myAudio.clip = loadedClips[songIdx];
+        currentSongScore = songListLoader.songList[songIdx].GetScoreText();
+        myText.text = songListLoader.songList[songIdx].name + "\nTop score:" + currentSongScore;
+        myAudio.clip = songListLoader.songList[songIdx].clip;
         myAudio.Play();
     }
 
@@ -131,18 +141,23 @@ public class UIControl : MonoBehaviour {
     {
         songIdx--;
         if (songIdx < 0)
-            songIdx = songList.Count-1;
+            songIdx = songListLoader.songList.Count-1;
+
+        /*
         StreamReader scoreReader = new StreamReader(songDirectList[songIdx] + "/score.txt");
         currentSongScore = scoreReader.ReadLine();
         myText.text = songList[songIdx] + "\nTop score:" + currentSongScore;
         scoreReader.Close();
+        */
 
         //StartCoroutine("LoadAudioFile", songFullList[songIdx]);
         //myAudio.clip = Resources.Load<AudioClip>(songFullList[songIdx]);
         //Debug.Log("Current Song: " + myAudio.clip.name);
         //myAudio.Play();
 
-        myAudio.clip = loadedClips[songIdx];
+        currentSongScore = songListLoader.songList[songIdx].GetScoreText();
+        myText.text = songListLoader.songList[songIdx].name + "\nTop score:" + currentSongScore;
+        myAudio.clip = songListLoader.songList[songIdx].clip;
         myAudio.Play();
     }
 
@@ -155,31 +170,50 @@ public class UIControl : MonoBehaviour {
         //StopCoroutine("LoadAudioFile");
         //StopAllCoroutines();
         myAudio.Stop();
-        Debug.Log(songList[songIdx]);
+        //Debug.Log(songList[songIdx]);
     }
 
     public void SelectBoardAppear()
     {
         if (CalculateScore.score > Convert.ToInt32(currentSongScore))
         {
+            songListLoader.songList[songIdx].WriteScore(CalculateScore.score);
+            /*
             StreamWriter scoreWriter = new StreamWriter(songDirectList[songIdx] + "/score.txt");
             scoreWriter.WriteLine(CalculateScore.score);
             scoreWriter.Close();
+            */
         }
         CalculateScore.score = 0;
         CalculateScore.combo = 0;
         for (int i = 0; i < 4; i++)
             _DrumScript[i].selectionMode = true;
         UIobject2.SetActive(true);
+
+        /*
         StreamReader scoreReader = new StreamReader(songDirectList[songIdx] + "/score.txt");
         myText.text = songList[songIdx] + "\nTop score:" + scoreReader.ReadLine();
         scoreReader.Close();
 
         StartCoroutine("LoadAudioFile", songFullList[songIdx]);
+        */
         //myAudio.clip = Resources.Load<AudioClip>(songFullList[songIdx]);
         //myAudio.Play();
+
+        currentSongScore = songListLoader.songList[songIdx].GetScoreText();
+        myText.text = songListLoader.songList[songIdx].name + "\nTop score:" + currentSongScore;
+        myAudio.clip = songListLoader.songList[songIdx].clip;
+        myAudio.Play();
     }
 
+    void SetSongAndPlay()
+    {
+        currentSongScore = songListLoader.songList[songIdx].GetScoreText();
+        myText.text = songListLoader.songList[songIdx].name + "\nTop score:" + currentSongScore;
+        myAudio.clip = songListLoader.songList[songIdx].clip;
+        myAudio.Play();
+    }
+    /*
     public IEnumerator LoadAudioFile(string pathWithoutEx, int index)
     {
         string tmp_extention = "";
@@ -224,4 +258,5 @@ public class UIControl : MonoBehaviour {
         //myAudio.clip = tmp_clip;
         //myAudio.Play();
     }
+    */
 }

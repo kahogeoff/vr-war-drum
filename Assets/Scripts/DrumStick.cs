@@ -69,14 +69,14 @@ public class DrumStick : MonoBehaviour {
                 {
                     GameObject tmp_FX = Instantiate(HitEffect, transform.position, transform.rotation);
                     tmp_FX.transform.localScale = EffectScale;
-                    Destroy(tmp_FX, 1.0f);
+                    Destroy(tmp_FX, tmp_FX.GetComponent<ParticleSystem>().duration+0.2f);
                 }
                 device.TriggerHapticPulse(2800);
                 HittedDrumType = tmp_drum.Type;
             }
             else
             {
-                device.TriggerHapticPulse(0);
+                device.TriggerHapticPulse(1000);
             }
         }
         _lock = true;
@@ -91,16 +91,7 @@ public class DrumStick : MonoBehaviour {
     {
         if (c.collider.tag.Contains("Drum"))
         {
-            DrumScript tmp_drum = c.gameObject.GetComponent<DrumScript>();
-            float tmp_acceptableForce = tmp_drum.AcceptableHittingForce;
-            if (c.relativeVelocity.magnitude > tmp_acceptableForce)
-            {
-                device.TriggerHapticPulse(800);
-            }
-            else
-            {
-                device.TriggerHapticPulse(0);
-            }
+            device.TriggerHapticPulse(1000);
             HittedDrumType = DrumScript.DrumType.NotADrum;
         }
         _lock = false;
