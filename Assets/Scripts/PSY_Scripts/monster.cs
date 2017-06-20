@@ -11,7 +11,7 @@ public class monster : MonoBehaviour {
 
     //public EnemyType Type = EnemyType.Red;
 
-    static public bool continuously_beating = false;
+    //static public bool continuously_beating = false;
     public int myIndex;
     public float speed = 100.0f;
     public GameObject scoreCaculaor;
@@ -101,7 +101,6 @@ public class monster : MonoBehaviour {
     // Update is called once per frame
     void Update () {
         //transform.Translate (Vector3.forward * speed * Time.deltaTime);
-        Debug.Log(continuously_beating);
         if(transform.position.z > 0.0f)
         {
             scoreCaculaor.SendMessage("calCombo", false);
@@ -206,12 +205,12 @@ public class monster : MonoBehaviour {
     {
         //Debug.Log("=====MoveAway=====");
         //Debug.Log(continuously_beating);
-        if (myIndex == 5 && continuously_beating)
-        {
-            Debug.Log("Destroy");
-            Destroy(gameObject);
-            continuously_beating = false;
-        }
+        //if (myIndex == 5 && continuously_beating)
+        //{
+        //    Debug.Log("Destroy");
+        //    Destroy(gameObject);
+        //    continuously_beating = false;
+        //}
     }
 
     void ToggleCollider(bool state)
