@@ -33,4 +33,4 @@ VR戰鼓是一款參考了「太鼓之達人」的VR太鼓模擬遊戲，支援�
 
 ## 授權
 
-請詳閱[LICENSE.md](LICENSE.md)
+請詳閱[LICENSE.md](LICENSE.md)(英文)
