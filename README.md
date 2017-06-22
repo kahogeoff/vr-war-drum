@@ -1,6 +1,6 @@
 # VR戰鼓 (VR War Drum)
 
-![Imgur](http://i.imgur.com/syUQw4D.gif)
+![CringeyGuy](https://media.giphy.com/media/3ohzdYW2heSGp1qRHy/giphy.gif)
 
 VR戰鼓是一款參考了「太鼓之達人」的VR太鼓模擬遊戲，支援另一款太鼓模擬器「太鼓さん次郎」的譜面檔(tja檔)。
 
