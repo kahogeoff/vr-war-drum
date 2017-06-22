@@ -21,6 +21,8 @@ VR戰鼓是一款參考了「太鼓之達人」的VR太鼓模擬遊戲，支援�
 - [x] Drum hit
 - [x] Enemy spawning
 - [x] Enviroment & enemies design
+- [ ] Remove trash code
+- [ ] Add comment on code
 - [ ] Bug fix
 - [ ] etc.
 
