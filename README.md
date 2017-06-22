@@ -25,12 +25,12 @@ VR戰鼓是一款參考了「太鼓之達人」的VR太鼓模擬遊戲，支援�
 
  本人及本團隊**不擁有**`Assets/Download`及`Assets/SFX`下素材的版權，大部分素材皆來自Unity Assets Store及網絡。
 
-## 製作名單
+## 製作人員
 
-  - Geoffrey Cheung (@kahogeoff)
-  - 羅凱璇 (@geek2460)
-  - Peng Shih Yi
+  - Geoffrey Cheung([@kahogeoff](https://github.com/kahogeoff))
+  - 羅凱璇([@geek2460](https://github.com/geek2460))
+  - Peng Shih Yi
 
 ## 授權
 
-請詳閱LICENSE.md[/LICENSE.md]
+請詳閱[LICENSE.md](LICENSE.md)
