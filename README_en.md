@@ -30,7 +30,7 @@
 
  My team and I are **NOT OWNING** the copyright of the materials that under `Assets/Download` and `Assets/SFX` folder, most of the materials are come from Unity Assets Store and Internet.
 
-## 製作人員
+## Credits
 
   - Geoffrey Cheung([@kahogeoff](https://github.com/kahogeoff))
   - 羅凱璇([@geek2460](https://github.com/geek2460))
