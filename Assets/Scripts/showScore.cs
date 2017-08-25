@@ -8,12 +8,12 @@ public class showScore : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         _text = GetComponent<Text>();
-        _text.text = "Score:" + CalculateScore.score + "\n" + "Combo:"+ CalculateScore.combo;
+        _text.text = "Score:" + CalculateScore.score + " | " + "Combo:"+ CalculateScore.combo;
 
     }
 	
 	// Update is called once per frame
 	void Update () {
-        _text.text = "Score:" + CalculateScore.score + "\n" + "Combo:" + CalculateScore.combo;
+        _text.text = "Score:" + CalculateScore.score + " | " + "Combo:" + CalculateScore.combo;
     }
 }

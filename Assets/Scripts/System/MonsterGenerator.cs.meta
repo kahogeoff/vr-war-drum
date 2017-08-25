@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: f9aca9d00b3a8734b813839dcf03e1aa
+timeCreated: 1503246227
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - stateManager: {instanceID: 0}
+  - audio: {instanceID: 0}
+  - spawnsite: {instanceID: 0}
+  - hitpoint: {instanceID: 0}
+  - _UIControl: {instanceID: 0}
+  - _SongListLoader: {instanceID: 0}
+  - spawnEffect: {fileID: 1170685013439962, guid: 6e01d1f0931e5c341a708d7331950ceb,
+      type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

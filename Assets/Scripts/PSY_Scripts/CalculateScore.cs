@@ -8,6 +8,8 @@ public class CalculateScore : MonoBehaviour {
     static public int combo = 0;
     static public int maxcombo = 0;
 
+    static public string PreviousHit = "";
+
     private Transform[] perfecthitpositions;
 
 	// Use this for initialization
@@ -22,6 +24,7 @@ public class CalculateScore : MonoBehaviour {
         score = 0;
         maxcombo = 0;
         combo = 0;
+        PreviousHit = "";
     }
 	
 	// Update is called once per frame
@@ -35,56 +38,25 @@ public class CalculateScore : MonoBehaviour {
 
         int index = (int)obj[0];
         Vector3 hitpoint = (Vector3)obj[1];
-        switch (index)
+
+        if (index < 5)
         {
-            case 1:
-                if ((hitpoint - perfecthitpositions[0].position).magnitude < 1)
-                {
-                    //Debug.Log("Perfect");
-                    score += 2 * 100 + combo*50;
-                }
-                else
-                {
-                    score += 1 * 100 + combo * 50;
-                }
-                break;
-            case 2:
-                if ((hitpoint - perfecthitpositions[1].position).magnitude < 1)
-                {
-                    //Debug.Log("Perfect");
-                    score += 2 * 100 + combo * 50;
-                }
-                else
-                {
-                    score += 1 * 100 + combo * 50;
-                }
-                break;
-            case 3:
-                if ((hitpoint - perfecthitpositions[2].position).magnitude < 1)
-                {
-                    //Debug.Log("Perfect");
-                    score += 2 * 100 + combo * 50;
-                }
-                else
-                {
-                    score += 1 * 100 + combo * 50;
-                }
-                break;
-            case 4:
-                if ((hitpoint - perfecthitpositions[3].position).magnitude < 1)
-                {
-                    //Debug.Log("Perfect");
-                    score += 2 * 100 + combo * 50;
-                }
-                else
-                {
-                    score += 1 * 100 + combo * 50;
-                }
-                break;
-            case 5:
-                if ((hitpoint - perfecthitpositions[4].position).magnitude < 1)
-                    score += 1 * 25;
-                break;
+            if ((hitpoint - perfecthitpositions[index - 1].position).magnitude < 1)
+            {
+                //Debug.Log("Perfect");
+                score += 2 * 100 + combo * 50;
+                PreviousHit = "Perfect!!";
+            }
+            else
+            {
+                score += 1 * 100 + combo * 50;
+                PreviousHit = "Good!";
+            }
+        }
+        else
+        {
+            if ((hitpoint - perfecthitpositions[index - 1].position).magnitude < 1)
+                score += 1 * 25;
         }
         //Debug.Log("score: " + score);
     }
@@ -98,6 +70,7 @@ public class CalculateScore : MonoBehaviour {
                 maxcombo = combo;
             }
             combo = 0;
+            PreviousHit = "Miss...";
         }
         else
         {
