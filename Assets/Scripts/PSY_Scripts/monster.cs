@@ -19,9 +19,13 @@ public class monster : MonoBehaviour {
     public GameObject HitNotice;
     public Vector3 EffectScale = Vector3.one;
     public Vector2 HitNoticeRange = new Vector2(3.0f, 0.8f);
+    public GameObject HitNoticeAlert;
+    public float AlertDistance = 1.0f;
 
     private Transform[] spawnsites;
     private Transform target;
+    private bool isMissedLock = false;
+    private bool isAlerted = false;
 
     // Use this for initialization
     void Start () {
@@ -57,8 +61,6 @@ public class monster : MonoBehaviour {
             myIndex = 5;
             target = GameObject.Find("HitYellow").transform;
         }
-        //Debug.Log(target.position);
-        //target.position = new Vector3(-4.8F, 1.25F, 10F);
 
 		Vector3 relativePos = target.position - transform.position;
 		Quaternion rotation = Quaternion.LookRotation(relativePos);
@@ -92,7 +94,7 @@ public class monster : MonoBehaviour {
             iTween.MoveTo(gameObject, iTween.Hash(
             "position", target.position,
             "speed", speed,
-            "easetype", iTween.EaseType.linear,//));
+            "easetype", iTween.EaseType.linear,
             "oncomplete", "ToggleCollider",
             "oncompleteparams", true));
         }
@@ -100,47 +102,34 @@ public class monster : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        //transform.Translate (Vector3.forward * speed * Time.deltaTime);
-        if(transform.position.z > 0.0f)
+        if (HitNoticeAlert != null) {
+            if(Vector3.Distance(target.position, transform.position) <= AlertDistance && !isAlerted)
+            {
+                Instantiate<GameObject>(HitNoticeAlert, transform.position + transform.up * 3.2f, transform.rotation, transform);
+
+                isAlerted = true;
+            }
+        }
+
+        if (transform.position.z > 0.0f)
         {
             scoreCaculaor.SendMessage("calCombo", false);
+
+            if(!isMissedLock)
+            { 
+                GameObject.FindGameObjectWithTag("LevelManager").SendMessage("MissngMessagePopup");
+                isMissedLock = true;
+            }
         }
-        MoveAway();
 
     }
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("OnTriggerEnter");
 
         switch (myIndex)
         {
             case 1:
-                if (other.CompareTag("Bullet"))
-                {
-                    Destroy(gameObject);
-                    Destroy(other.gameObject);
-
-                    object[] message = new object[2];
-                    message[0] = myIndex;
-                    message[1] = transform.position;
-                    scoreCaculaor.SendMessage("calScore", message);
-                    scoreCaculaor.SendMessage("calCombo", true);
-                }
-                break;
-            case 2:
-                if (other.CompareTag("Ray"))
-                {
-                    Destroy(gameObject);
-                    Destroy(other.gameObject);
-
-                    object[] message = new object[2];
-                    message[0] = myIndex;
-                    message[1] = transform.position;
-                    scoreCaculaor.SendMessage("calScore", message);
-                    scoreCaculaor.SendMessage("calCombo", true);
-                }
-                break;
             case 3:
                 if (other.CompareTag("Bullet"))
                 {
@@ -152,8 +141,11 @@ public class monster : MonoBehaviour {
                     message[1] = transform.position;
                     scoreCaculaor.SendMessage("calScore", message);
                     scoreCaculaor.SendMessage("calCombo", true);
+                    GameObject.FindGameObjectWithTag("LevelManager").SendMessage("HitMessagePopup", transform);
                 }
                 break;
+
+            case 2:
             case 4:
                 if (other.CompareTag("Ray"))
                 {
@@ -165,8 +157,10 @@ public class monster : MonoBehaviour {
                     message[1] = transform.position;
                     scoreCaculaor.SendMessage("calScore", message);
                     scoreCaculaor.SendMessage("calCombo", true);
+                    GameObject.FindGameObjectWithTag("LevelManager").SendMessage("HitMessagePopup", transform);
                 }
                 break;
+
             case 5:
                 if (other.CompareTag("Ray") || other.CompareTag("Bullet"))
                 {
@@ -181,36 +175,25 @@ public class monster : MonoBehaviour {
         }
 
     }
-    
+
+    void OnTriggerExit(Collider other)
+    {
+        //Do nothing
+    }
+
+    void OnDestroy()
+    {
+        GameObject tmp_destroyEffect = Instantiate(destroyEffect, transform.position, transform.rotation);
+        tmp_destroyEffect.transform.localScale = EffectScale;
+        Destroy(tmp_destroyEffect, .5f);
+    }
+
     void MoveExtraForward()
     {
         iTween.MoveTo(gameObject, iTween.Hash(
             "position", target.position + transform.forward * speed,
             "speed", speed,
             "easetype", iTween.EaseType.linear));
-    }
-
-    void OnDestroy()
-    {
-        //Instantiate(destroyEffect, this.transform);
-        GameObject.FindGameObjectWithTag("LevelManager").SendMessage("TextPopup", transform);
-
-        GameObject tmp_destroyEffect = Instantiate(destroyEffect, transform.position, transform.rotation);
-        tmp_destroyEffect.transform.localScale = EffectScale;
-        Destroy(tmp_destroyEffect, .5f);
-
-    }
-
-    void MoveAway()
-    {
-        //Debug.Log("=====MoveAway=====");
-        //Debug.Log(continuously_beating);
-        //if (myIndex == 5 && continuously_beating)
-        //{
-        //    Debug.Log("Destroy");
-        //    Destroy(gameObject);
-        //    continuously_beating = false;
-        //}
     }
 
     void ToggleCollider(bool state)
