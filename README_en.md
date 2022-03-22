@@ -1,5 +1,7 @@
 # VR War Drum (VR戰鼓)
 
+[Demo Video](https://youtu.be/_Ym7vfssxIw)
+
 ![CringeyGuy](https://media.giphy.com/media/3ohzdYW2heSGp1qRHy/giphy.gif)
 
 "VR War Drum" is a music game which hevaily inspired by "Taiko no Tatsujin", support the sheet music file(.tja) of another taiko simulator "Taikojiro".
